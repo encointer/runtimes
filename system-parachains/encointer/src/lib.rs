@@ -100,7 +100,7 @@ use system_parachains_constants::{
 	SLOT_DURATION,
 };
 use weights::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight};
-use xcm::latest::prelude::{BodyId, AssetId as XcmAssetId};
+use xcm::latest::prelude::{AssetId as XcmAssetId, BodyId};
 
 use xcm_config::{KsmLocation, XcmOriginToTransactDispatchOrigin};
 

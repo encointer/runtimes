@@ -21,10 +21,9 @@ use super::{
 };
 use frame_support::{
 	parameter_types,
-	traits::{Everything, Nothing},
+	traits::{Contains, Everything, Nothing},
 	weights::Weight,
 };
-use frame_support::traits::{Contains};
 use frame_system::EnsureRoot;
 use pallet_xcm::XcmPassthrough;
 use parachains_common::xcm_config::{ConcreteAssetFromSystem, ParentRelayOrSiblingParachains};
@@ -33,7 +32,15 @@ use polkadot_parachain_primitives::primitives::Sibling;
 use sp_core::ConstU32;
 
 use xcm::latest::prelude::*;
-use xcm_builder::{AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowKnownQueryResponses, AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, DenyReserveTransferToRelayChain, DenyThenTry, DescribeTerminus, EnsureXcmOrigin, FixedWeightBounds, FrameTransactionalProcessor, FungibleAdapter, HashedDescription, IsConcrete, NativeAsset, ParentAsSuperuser, ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia, SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit, TrailingSetTopicAsId, UsingComponents, WithComputedOrigin};
+use xcm_builder::{
+	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowKnownQueryResponses,
+	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, DenyReserveTransferToRelayChain,
+	DenyThenTry, DescribeTerminus, EnsureXcmOrigin, FixedWeightBounds, FrameTransactionalProcessor,
+	FungibleAdapter, HashedDescription, IsConcrete, NativeAsset, ParentAsSuperuser, ParentIsPreset,
+	RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
+	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
+	TrailingSetTopicAsId, UsingComponents, WithComputedOrigin,
+};
 use xcm_executor::XcmExecutor;
 
 parameter_types! {
@@ -126,9 +133,7 @@ pub type Barrier = TrailingSetTopicAsId<
 					AllowTopLevelPaidExecutionFrom<Everything>,
 					// Parent, its pluralities (i.e. governance bodies), parent's treasury and
 					// sibling bridge hub get free execution.
-					AllowExplicitUnpaidExecutionFrom<(
-						ParentOrParentsPlurality,
-					)>,
+					AllowExplicitUnpaidExecutionFrom<(ParentOrParentsPlurality,)>,
 					// Subscriptions for version tracking are OK.
 					AllowSubscriptionsFrom<ParentRelayOrSiblingParachains>,
 				),
