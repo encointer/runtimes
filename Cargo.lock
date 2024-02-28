@@ -3244,9 +3244,9 @@ dependencies = [
 
 [[package]]
 name = "encointer-primitives"
-version = "6.0.0"
+version = "6.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "33f9df6f65bba31665651e99a088ec32664fd585051e74069c8401a77f9951fa"
+checksum = "a4d3adcceca350eed739e9677fae4e1bea6c7ad526eee456ca30037cbcfe9b9a"
 dependencies = [
  "bs58 0.5.0",
  "crc",
