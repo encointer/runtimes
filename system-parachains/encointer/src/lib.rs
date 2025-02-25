@@ -43,9 +43,7 @@ use codec::{Decode, Encode, MaxEncodedLen};
 use core::marker::PhantomData;
 use cumulus_pallet_parachain_system::RelayNumberMonotonicallyIncreases;
 use cumulus_primitives_core::{AggregateMessageOrigin, ParaId};
-use encointer_balances_tx_payment::{
-	AccountIdOf, AssetBalanceOf, AssetIdOf, BalanceToCommunityBalance,
-};
+use encointer_balances_tx_payment::{AccountIdOf, AssetBalanceOf, AssetIdOf, BalanceToCommunityBalance, ONE_KSM};
 pub use encointer_primitives::{
 	balances::{BalanceEntry, BalanceType, Demurrage},
 	bazaar::{BusinessData, BusinessIdentifier, OfferingData},
@@ -661,15 +659,17 @@ where
 }
 
 #[cfg(feature = "runtime-benchmarks")]
-pub struct AssetTxHelper;
+pub struct AssetTxBenchmarkHelper;
 
 #[cfg(feature = "runtime-benchmarks")]
-impl pallet_asset_tx_payment::BenchmarkHelperTrait<AccountId, CommunityIdentifier, CommunityIdentifier> for AssetTxHelper {
+impl pallet_asset_tx_payment::BenchmarkHelperTrait<AccountId, CommunityIdentifier, CommunityIdentifier> for AssetTxBenchmarkHelper {
 	fn create_asset_id_parameter(_id: u32) -> (CommunityIdentifier, CommunityIdentifier) {
 		Default::default()
 	}
 	fn setup_balances_and_pool(asset_id: CommunityIdentifier, account: AccountId) {
-		EncointerBalances::issue(asset_id.into(), &account, 100u32.into()).unwrap();
+		use frame_support::traits::fungible::Mutate;
+		Balances::set_balance(&account, ONE_KSM);
+		EncointerBalances::issue(asset_id, &account, BalanceType::from_num(100u32)).unwrap();
 	}
 }
 
@@ -684,7 +684,7 @@ impl pallet_asset_tx_payment::Config for Runtime {
 	>;
 	type WeightInfo =  weights::pallet_asset_tx_payment::WeightInfo<Runtime>;
 	#[cfg(feature = "runtime-benchmarks")]
-	type BenchmarkHelper = AssetTxHelper;
+	type BenchmarkHelper = AssetTxBenchmarkHelper;
 }
 
 impl pallet_authorship::Config for Runtime {
