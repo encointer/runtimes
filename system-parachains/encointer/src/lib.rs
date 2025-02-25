@@ -660,6 +660,20 @@ where
 	}
 }
 
+#[cfg(feature = "runtime-benchmarks")]
+pub struct AssetTxHelper;
+
+#[cfg(feature = "runtime-benchmarks")]
+impl pallet_asset_tx_payment::BenchmarkHelperTrait<AccountId, CommunityIdentifier, CommunityIdentifier> for AssetTxHelper {
+	fn create_asset_id_parameter(_id: u32) -> (CommunityIdentifier, CommunityIdentifier) {
+		Default::default()
+	}
+	fn setup_balances_and_pool(asset_id: CommunityIdentifier, account: AccountId) {
+		EncointerBalances::issue(asset_id.into(), &account, 100u32.into()).unwrap();
+	}
+}
+
+
 // Allow fee payment in community currency
 impl pallet_asset_tx_payment::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
@@ -668,7 +682,9 @@ impl pallet_asset_tx_payment::Config for Runtime {
 		encointer_balances_tx_payment::BalanceToCommunityBalance<Runtime>,
 		AssetsToBlockAuthor<Runtime>,
 	>;
-	type WeightInfo = ();
+	type WeightInfo =  weights::pallet_asset_tx_payment::WeightInfo<Runtime>;
+	#[cfg(feature = "runtime-benchmarks")]
+	type BenchmarkHelper = AssetTxHelper;
 }
 
 impl pallet_authorship::Config for Runtime {
@@ -845,6 +861,7 @@ mod benches {
 	frame_benchmarking::define_benchmarks!(
 		[frame_system, SystemBench::<Runtime>]
 		[frame_system_extensions, SystemExtensionsBench::<Runtime>]
+		[pallet_asset_tx_payment, AssetTxPayment]
 		[pallet_balances, Balances]
 		[pallet_collective, Collective]
 		[pallet_message_queue, MessageQueue]
@@ -1021,7 +1038,7 @@ mod benches {
 	pub use frame_benchmarking::{BenchmarkBatch, BenchmarkError, BenchmarkList, Benchmarking};
 	pub use frame_support::traits::StorageInfoTrait;
 	pub use frame_system_benchmarking::Pallet as SystemBench;
-	use frame_system_benchmarking::extensions::Pallet as SystemExtensionsBench;
+	pub use frame_system_benchmarking::extensions::Pallet as SystemExtensionsBench;
 	pub use pallet_xcm::benchmarking::Pallet as PalletXcmExtrinsicsBenchmark;
 	pub type XcmBalances = pallet_xcm_benchmarks::fungible::Pallet<Runtime>;
 	pub use frame_support::traits::{TrackedStorageKey, WhitelistedStorageKeys};
