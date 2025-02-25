@@ -18,8 +18,10 @@
 
 use crate::*;
 use sp_genesis_builder::PresetId;
-use sp_std::vec::Vec;
 use system_parachains_constants::genesis_presets::*;
+
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 
 const ENCOINTER_KUSAMA_ED: Balance = ExistentialDeposit::get();
 
