@@ -22,10 +22,9 @@ use frame_support::BoundedVec;
 use pallet_xcm_benchmarks_fungible::WeightInfo as XcmFungibleWeight;
 use pallet_xcm_benchmarks_generic::WeightInfo as XcmGeneric;
 use xcm::{
-	latest::{prelude::*, AssetTransferFilter},
+	latest::{prelude::*, AssetTransferFilter, XcmWeightInfo},
 	DoubleEncoded,
 };
-use xcm::latest::XcmWeightInfo;
 
 trait WeighAssets {
 	fn weigh_assets(&self, weight: Weight) -> Weight;

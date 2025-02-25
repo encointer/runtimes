@@ -43,7 +43,9 @@ use codec::{Decode, Encode, MaxEncodedLen};
 use core::marker::PhantomData;
 use cumulus_pallet_parachain_system::RelayNumberMonotonicallyIncreases;
 use cumulus_primitives_core::{AggregateMessageOrigin, ParaId};
-use encointer_balances_tx_payment::{AccountIdOf, AssetBalanceOf, AssetIdOf, BalanceToCommunityBalance, ONE_KSM};
+use encointer_balances_tx_payment::{
+	AccountIdOf, AssetBalanceOf, AssetIdOf, BalanceToCommunityBalance, ONE_KSM,
+};
 pub use encointer_primitives::{
 	balances::{BalanceEntry, BalanceType, Demurrage},
 	bazaar::{BusinessData, BusinessIdentifier, OfferingData},
@@ -662,7 +664,13 @@ where
 pub struct AssetTxBenchmarkHelper;
 
 #[cfg(feature = "runtime-benchmarks")]
-impl pallet_asset_tx_payment::BenchmarkHelperTrait<AccountId, CommunityIdentifier, CommunityIdentifier> for AssetTxBenchmarkHelper {
+impl
+	pallet_asset_tx_payment::BenchmarkHelperTrait<
+		AccountId,
+		CommunityIdentifier,
+		CommunityIdentifier,
+	> for AssetTxBenchmarkHelper
+{
 	fn create_asset_id_parameter(_id: u32) -> (CommunityIdentifier, CommunityIdentifier) {
 		Default::default()
 	}
@@ -673,7 +681,6 @@ impl pallet_asset_tx_payment::BenchmarkHelperTrait<AccountId, CommunityIdentifie
 	}
 }
 
-
 // Allow fee payment in community currency
 impl pallet_asset_tx_payment::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
@@ -682,7 +689,7 @@ impl pallet_asset_tx_payment::Config for Runtime {
 		encointer_balances_tx_payment::BalanceToCommunityBalance<Runtime>,
 		AssetsToBlockAuthor<Runtime>,
 	>;
-	type WeightInfo =  weights::pallet_asset_tx_payment::WeightInfo<Runtime>;
+	type WeightInfo = weights::pallet_asset_tx_payment::WeightInfo<Runtime>;
 	#[cfg(feature = "runtime-benchmarks")]
 	type BenchmarkHelper = AssetTxBenchmarkHelper;
 }
@@ -1037,8 +1044,9 @@ mod benches {
 	pub use cumulus_pallet_session_benchmarking::Pallet as SessionBench;
 	pub use frame_benchmarking::{BenchmarkBatch, BenchmarkError, BenchmarkList, Benchmarking};
 	pub use frame_support::traits::StorageInfoTrait;
-	pub use frame_system_benchmarking::Pallet as SystemBench;
-	pub use frame_system_benchmarking::extensions::Pallet as SystemExtensionsBench;
+	pub use frame_system_benchmarking::{
+		extensions::Pallet as SystemExtensionsBench, Pallet as SystemBench,
+	};
 	pub use pallet_xcm::benchmarking::Pallet as PalletXcmExtrinsicsBenchmark;
 	pub type XcmBalances = pallet_xcm_benchmarks::fungible::Pallet<Runtime>;
 	pub use frame_support::traits::{TrackedStorageKey, WhitelistedStorageKeys};
