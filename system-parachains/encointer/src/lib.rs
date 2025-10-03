@@ -582,9 +582,14 @@ impl pallet_encointer_faucet::Config for Runtime {
 	type WeightInfo = weights::pallet_encointer_faucet::WeightInfo<Runtime>;
 }
 
+// parameter_types! {
+// 	pub const ConfirmationPeriod: Moment = 2 * 24 * 3600 * 1000; // [ms]
+// 	pub const ProposalLifetime: Moment = 9 * 24 * 3600 * 1000; // [ms]
+// }
+
 parameter_types! {
-	pub const ConfirmationPeriod: Moment = 2 * 24 * 3600 * 1000; // [ms]
-	pub const ProposalLifetime: Moment = 9 * 24 * 3600 * 1000; // [ms]
+	pub const ConfirmationPeriod: Moment = 5 * 60 * 1000; // [ms]
+	pub const ProposalLifetime: Moment = 20 * 60 * 1000; // [ms]
 }
 
 impl pallet_encointer_democracy::Config for Runtime {
