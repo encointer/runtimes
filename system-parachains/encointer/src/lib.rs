@@ -588,7 +588,8 @@ impl pallet_encointer_faucet::Config for Runtime {
 // }
 
 parameter_types! {
-	pub const ConfirmationPeriod: Moment = 5 * 60 * 1000; // [ms]
+	// 15 Seconds
+	pub const ConfirmationPeriod: Moment = 30 * 1000; // [ms]
 	pub const ProposalLifetime: Moment = 20 * 60 * 1000; // [ms]
 }
 
