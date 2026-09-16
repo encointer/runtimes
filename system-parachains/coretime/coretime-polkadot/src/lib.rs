@@ -34,7 +34,7 @@ pub mod xcm_config;
 
 use alloc::{borrow::Cow, vec, vec::Vec};
 use codec::{Decode, DecodeWithMemTracking, Encode, MaxEncodedLen};
-use cumulus_pallet_parachain_system::RelayNumberMonotonicallyIncreases;
+use cumulus_pallet_parachain_system::{RelayNumberMonotonicallyIncreases, RelaychainDataProvider};
 use cumulus_primitives_core::{AggregateMessageOrigin, ParaId};
 use frame_support::{
 	construct_runtime, derive_impl,
@@ -315,8 +315,9 @@ impl pallet_balances::Config for Runtime {
 
 parameter_types! {
 	pub const AccumulateForwardPalletId: PalletId = ACCUMULATE_FORWARD_PALLET_ID;
-	/// Forward at most hourly, and only once at least 10 DOT have accumulated.
-	pub const ForwardPeriod: BlockNumber = HOURS;
+	/// Forward at most hourly, and only once at least 10 DOT have accumulated. Counted in relay
+	/// chain blocks.
+	pub const ForwardPeriod: BlockNumber = polkadot_runtime_constants::time::HOURS;
 	pub const MinForwardAmount: Balance = 10 * UNITS;
 }
 
@@ -331,11 +332,7 @@ impl pallet_accumulate_and_forward::Config for Runtime {
 	>;
 	type TransferPeriod = ForwardPeriod;
 	type MinTransferAmount = MinForwardAmount;
-	// The pallet forwards only on exact multiples of the period. This chain authors every 12s, so
-	// relay parents skip every other number and the relay clock would fire on one parity only.
-	// TODO: switch to `RelaychainDataProvider` once
-	// https://github.com/paritytech/polkadot-sdk/issues/13149 lands.
-	type BlockNumberProvider = System;
+	type BlockNumberProvider = RelaychainDataProvider<Runtime>;
 	type WeightInfo = weights::pallet_accumulate_and_forward::WeightInfo<Runtime>;
 }
 

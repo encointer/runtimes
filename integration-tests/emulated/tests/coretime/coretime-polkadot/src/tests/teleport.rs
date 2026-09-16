@@ -19,6 +19,7 @@ use integration_tests_helpers::{
 	test_parachain_is_trusted_teleporter, test_parachain_is_trusted_teleporter_for_relay,
 	test_relay_is_trusted_teleporter,
 };
+use sp_runtime::traits::BlockNumberProvider;
 
 #[test]
 fn teleport_via_transfer_assets_from_and_to_relay() {
@@ -112,13 +113,14 @@ fn teleport_via_transfer_assets_from_and_to_other_system_parachains_works() {
 
 #[test]
 fn accumulate_forward_coretime_transfers_native_to_asset_hub() {
-	use coretime_polkadot_runtime::System;
+	type RelayDataProvider =
+		cumulus_pallet_parachain_system::RelaychainDataProvider<coretime_polkadot_runtime::Runtime>;
 	emulated_integration_tests_common::dap_helpers::test_accumulate_forward_transfers_to_asset_hub::<
 		CoretimePolkadot,
 		AssetHubPolkadot,
 	>(
 		|acct, amount| CoretimePolkadot::fund_accounts(vec![(acct, amount)]),
-		System::block_number,
-		System::set_block_number,
+		|| RelayDataProvider::current_block_number(),
+		|n| RelayDataProvider::set_block_number(n),
 	);
 }
