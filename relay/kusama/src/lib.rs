@@ -2131,6 +2131,8 @@ pub type TxExtension = (
 pub mod migrations {
 	use super::*;
 
+	pub mod stale_dmp_queues;
+
 	parameter_types! {
 		pub const RecoveryPalletName: &'static str = "Recovery";
 	}
@@ -2147,6 +2149,7 @@ pub mod migrations {
 		parachains_configuration::migration::v13::MigrateToV13<Runtime>,
 		parachains_shared::migration::MigrateToV2<Runtime>,
 		RemoveRecoveryPallet,
+		stale_dmp_queues::RemoveStaleDmpQueues,
 	);
 
 	/// All migrations that will run on the next runtime upgrade.
